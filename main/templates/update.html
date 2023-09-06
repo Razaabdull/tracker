@@ -1,0 +1,55 @@
+{%  extends 'base.html'%}
+{% load static %}
+{% block body %}
+<div class="container col-md-5 mt-5 ">
+    <div  >
+    <div style="text-align: center ;"><h1><a href="/home/">ADD INCOME , EXPENSE DETAILS</a></h1></div>
+    <h2 class="text-center mt-5 ">UPDATE DETAILS </h2>
+   
+    <form  class="form-check badge-pill " method="post">
+       
+        {% csrf_token %}
+        <div class="form-group">
+           <label for="expenseCategory">Expense Category </label>
+           <button type="button" class=" text-center border-0 "
+                data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
+             
+       
+
+
+<select class="form-control" name="cat_name">
+{% for cat in category %}
+   <div> <option value="{{cat.id}}">{{cat.name}}</option></div>
+ {% endfor %}
+</select>
+</div>
+    
+    <label for="amount">Amount</label>
+    <input type="number" class="form-control" value="{{update_expense.amount}}" name="amount" step="0.01" required>
+
+    <div class="form-group">
+        <label>person</label>
+        <input type="text" class="form-control"  value="{{update_expense.person}}"  name="person" required>
+    </div>
+    <div class="form-group">
+        <label for="amount">payment mode</label> <button type="button" class=" text-center border-0 "
+                data-bs-toggle="modal" data-bs-target="#exampleModal">+</button> 
+        <select class="form-control" name="pay_mode">
+            {% for m in p_mode %}
+            <option value="{{m.id}}">{{m.mode}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="transactionType">Transaction Type</label>
+        <select class="form-control" name="transaction_type">
+            <option value="RECIEVED">RECIEVED</option>
+            <option value="PAYED">PAID</option>
+        </select>
+    </div>
+    <button type="submit" style="background-color: rgba(31, 80, 243, 0.9);; border: white;" class="btn btn-danger">Submit</button>
+    </form></div></div>
+
+
+    
+{% endblock body %}

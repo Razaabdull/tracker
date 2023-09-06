@@ -1,0 +1,33 @@
+{%  extends 'base.html'%}
+{% load static %}
+{% block body %}
+<div class="container col-md-5 mt-5 ">
+    <div  >
+    <div style="text-align: center ;" class="top_link"><h1><a href="/home/">ADD INCOME  DETAILS</a></h1></div>
+    <h2 class="text-center mt-5 ">UPDATE USER INCOME </h2>
+
+    <form  class="form-check badge-pill " method="post">
+        {% csrf_token %}
+       
+ 
+    
+    
+    <label for="amount">Person Name</label>
+    <input type="text" class="form-control" value="{{update_user_income.person}}" name="person" step="0.01" required>
+
+    <div class="form-group">
+        <label>Deposite</label>
+        <input type="number" class="form-control"  value="{{update_user_income.u_income}}"  name="amount" required>
+    </div>
+    <div class="form-group">
+        <label>Purpose</label>
+        <input type="text" class="form-control"  value="{{update_user_income.purpose}}"  name="Purpose" required>
+    </div>
+  
+   
+    <button type="submit" style="background-color: rgba(31, 80, 243, 0.9);; border: white;" class="btn btn-danger">Submit</button>
+    </form></div></div>
+
+
+    
+{% endblock body %}

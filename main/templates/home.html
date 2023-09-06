@@ -1,0 +1,202 @@
+{% extends 'base.html'%}
+ 
+{% load static %}
+{% block body %}
+
+
+
+
+    {% if user.is_authenticated %}
+    <div style="background-color:rgba(31, 80, 243, 0.9); box-shadow: 2px 2px 2px 2px rgba(31, 80, 243, 0.9);;" class="header text-center">
+        <div style="display: flex; flex-direction: row;  justify-content: end; gap:10px; margin-right:10px;">
+          
+        <a href="/add/" class="transaction-date" style="color: white;"><b>Add</b></a>
+        <a  href="/logout/" class="transaction-date" style="color: white; font-size: larger; ">logout <i class="fa fa-sign-out"></i></a>    
+        </div>
+ 
+        <h1 style="font-size: xx-large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">My Financial Dashboard</h1>
+
+
+    </div>
+    <div class="container mt-5 text-center">
+
+        <h3 class="transaction-date"><b>{{request.user}}</b></h3>
+    </div>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="balance-box text-center ">
+                    <h3>Account Balance</h3>
+
+                    {% if 0 > profile.balance %}
+                    <p class="balance-value" style=" margin-top: 31px;  font-size: medium;  color: brown;  ">
+                        Insufficeint balance</p>
+                    {% elif 100 > profile.balance %}
+                    <p class="balance-value" style=" margin-top: 31px;  font-size: medium;  color: brown;  ">
+                        {{profile.balance}}</p>
+                    {% else %}
+                    <p class="balance-value">₹ {{profile.balance}}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Button trigger modal -->
+
+                <div class="balance-box text-center">
+                    <h3> Income <button type="button" class=" text-center border-0 " data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            +
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <form method="post" action="/income/">
+                                            {%csrf_token%}
+                                            <h5 class="modal-title" id="exampleModalLabel">Add Income</h5>
+
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="person" placeholder="person name" class="form-control" type="text"
+                                            value>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="income" placeholder="depsoite" class="form-control" type="text"
+                                            value>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="purpose" placeholder="purpose" class="form-control" type="text"
+                                            value>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">close</button>
+                                        <button type="submit" class="btn btn-primary ">add</button>
+
+                                    </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </h3>
+                    <p class="balance-value" style="color: rgb(0, 102, 255) ;">₹ {{profile.income}}</p>
+
+
+                </div>
+            </div>
+           
+            <div class="col-md-4">
+                <div class="balance-box text-center">
+                    <h3>Total Expense</h3>
+                    <p class="balance-value">₹ {{profile.expenses}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container mt-5">
+        {% if messages %}
+        {% for message in messages %}
+        <div   id="message_container" class="alert alert-success" role="alert">
+            {{message}}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <body style="justify-content: end;" >
+            <div >
+              <form class="d-flex" method="get">
+                <input  class="card balance-box" style="width:300px; height: 51px;"  type="search" placeholder="Search"  name="search">
+                <button style="height:50px; margin-left: 5px;" class=" btn btn-primary" type="submit">Search</button>
+              </form>
+              
+            </div>
+          </body>
+        <div class="summary-box">
+            <h2>Financial Summary</h2>
+
+            {% for user_income in income %}
+            <ul class="transaction-list">
+                <li class="transaction-item">
+                    <div>
+                        <h6><b>{{user_income.person}}</b></h4>
+
+                            <p>{{user_income.purpose}}
+                            <p>
+                                <span class="transaction-date">{{user_income.date}}</span>
+                    </div>
+
+                    <div class="transaction-amount" style="color:  rgb(0, 102, 255);"> + ₹{{user_income.u_income}} </div>
+                    <a data-bs-target="#new"   href="{% url 'income_update' user_income.id %}"  >
+                        <i class="fa fa-pencil" style="font-size:17px"></i>
+                    </a><a onclick="return myFunction()" href="{% url 'delete_income' user_income.id %}"> <i style="color: brown;"  class="material-icons">delete</i> </a>                 
+                    </a>
+
+            </ul>
+            {% endfor %}
+            {% for exp in expense %}
+            <ul class="transaction-list">
+                <li class="transaction-item">
+                    <div>
+                        <h6><b>{{exp.person}}</b></h4>
+                            <h4>{{exp.category_name}}</h4>
+                            <p>{{exp.payment_mode}}
+                            <p>
+                                <span class="transaction-date">{{exp.date}}</span>
+                    </div>
+
+                    {% if exp.transaction_type == "PAYED" %}
+
+
+                    <div class="transaction-amount" style="color: brown;">- ₹{{exp.amount}}</div>
+                    <a   href="{% url 'update' exp.id %}"   >
+                        <i class="fa fa-pencil" style="font-size:17px"></i>
+                    </a><a onclick="return myFunction()" href="{% url 'delete' exp.id %}" ><i style="color: brown;"  class="material-icons">delete</i> </a>                 
+                    </a>
+
+                    {% else %}
+                    <div class="transaction-amount" style="color: darkgreen;"> + ₹{{exp.amount}}</div>
+                    <a   href="{% url 'update' exp.id %}">
+                        <i class="fa fa-pencil" style="font-size:17px"></i> </a>
+                   <a onclick="return myFunction()" href="{% url 'delete' exp.id %}"  ><i style="color: brown;"  class="material-icons">delete</i> </a>                 
+                    </a>
+
+                    {% endif %}
+                </li>
+
+
+            </ul>
+
+            {% endfor %}
+        </div>
+        {% else %}
+        <h1>need to login first</h1>
+        {% endif %}
+
+
+   <script>
+        function myFunction() {
+          if (confirm("Press a button!")) {
+           return true;
+          } else {
+            return false;
+          }
+      
+        }    
+
+  
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function () {
+            message_ele.style.display = "none";
+        }, 3000);
+ 
+
+         </script> 
+
+{% endblock body %}

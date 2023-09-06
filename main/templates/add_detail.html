@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+
+
+<div style="background-color: rgba(31, 80, 243, 0.9);; box-shadow: 2px 2px 2px 2px rgba(31, 80, 243, 0.9);; margin-top: -40px; " class="header text-center ">
+    
+    <div style="display: flex; flex-direction: row; justify-content: end; gap:10px; margin-right:10px;">
+      
+   
+    </div>
+ 
+    
+
+    <h1 style="font-size: xx-large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; margin-top:60px;">My Financial Dashboard</h1>
+    <div style=" display: flex; justify-content: left; margin-top: -20px;"><a href="/home/"><i style="font-size: 80px ;margin-top: -50px; margin-left: 10px;  color: white;" class="fa fa-home"></i></a></div>
+    <div style="display: flex; justify-content: end; gap: 15px; margin-right: 20px;" >
+    <div  style="margin-top: -60px;"  ><a   href="/logout/" class="transaction-date" style="color: white; font-size: larger;">logout <i class="fa fa-sign-out"></i></a>
+  </div></div>
+</div>
+
+<div class="container col-md-5 mt-5 ">
+    <div >
+    <div style="text-align: center ;" class="top_link"><h1>ADD INCOME , EXPENSE DETAILS</h1></div>
+    <div class="card-title"  ><h2 class="text-center mt-5">ADD DETAILS </h2></div>
+    <form  class="form-check badge-pill " method="post">
+        {% csrf_token %}
+        <div class="form-group">
+           
+    
+           <label for="expenseCategory">Expense Category </label><button type="button" class=" text-center border-0 "
+                data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
+             
+       
+
+
+<select class="form-control" name="cat_name">
+    {% for c in categoryy %}
+   <div><option value="{{c.id}}">{{c.name}}</option></div>
+    {% endfor %}
+</select>
+</div>
+
+    <label for="amount">Amount</label>
+    <input type="number" class="form-control" name="amount" step="0.01" required>
+
+    <div class="form-group">
+        <label>Date</label>
+        <input type="dat" class="form-control" name="person" required>
+    </div>
+    <div class="form-group">
+        <label>person</label>
+        <input type="text" class="form-control" name="person" required>
+    </div>
+    <div class="form-group">
+        <label for="amount">payment mode</label>
+        <select class="form-control" name="pay_mode">
+            {% for m in pay_mode %}
+            <option value="{{m.id}}">{{m.mode}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="transactionType">Transaction Type</label>
+        <select class="form-control" name="transaction_type">
+            <option value="RECIEVED">RECIEVED</option>
+            <option value="PAYED">PAID</option>
+        </select>
+    </div>
+    <button type="submit" style="background-color:  rgba(31, 80, 243, 0.9); border: white;" class="btn btn-danger">Submit</button>
+    </form></div></div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+
+        </div>
+
+        <form method="post" action="http://localhost:8000/add_category/">
+        <div class="modal-body">
+                {%csrf_token%}
+            <input name="add_category" placeholder="add_category" class="form-control" type="text" value>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+            <button type="submit" class="btn btn-primary ">add</button>
+            
+        </form>
+        </div>
+</div>
+</div>
+<body>
+    <script>
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function () {
+            message_ele.style.display = "none";
+        }, 3000);
+    </script>
+
+
+
+    {% endblock body %}
