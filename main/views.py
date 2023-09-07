@@ -3,7 +3,42 @@ from . models import *
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout   
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+import threading
 
+
+def graph(request):
+    data = Category.objects.filter(user = request.user)
+    print("===>", data)
+    labels = [item.name for item in data]
+    values = []
+    exp_lab = []
+    for cat in data:
+        expenses = expense.objects.filter(user=request.user,category_name_id=cat.id,transaction_type="PAYED")
+        temp_lab = []
+        for exp in expenses:
+            exp_lab.append(exp.category_name)
+            print("exp==>", exp.amount, exp.category_name)
+            if exp.category_name not in temp_lab:
+                temp_lab.append(exp.category_name)
+                values.append(exp.amount)
+    print("values==>", values)
+    print("labels==>", labels)
+    fig, ax = plt.subplots()
+    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    plt.close()
+
+    chart = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    
+    return render(request, 'graph.html', {'chart': chart})
 
 
 
@@ -234,7 +269,7 @@ def update(request,id):
                         messages.info(request, 'Transition update successfully')
                         return redirect('/home/')
                 else:
-                        messages.info(request, 'expense is too high according Balance')  
+                        messages.info(request, 'expense is too high according to Balance')  
                         return redirect(f"/update/{update_expense.id}/")
             
 
@@ -289,8 +324,6 @@ def update(request,id):
 def delete(request,id):
     user_expense = expense.objects.get(id=id)
     user_profilee=profile.objects.get(user=user_expense.user)
-
-   
     if user_expense.transaction_type=="PAYED":
         user_profilee.balance = float( user_profilee.balance) + float(user_expense.amount)
         user_profilee.expenses = float(user_profilee.expenses) - float(user_expense.amount)
@@ -300,7 +333,7 @@ def delete(request,id):
           messages.info(request,'can not delete expense , your expense will be negative ')
           return redirect('/home/')
         user_profilee.balance = float(user_profilee.balance) - float(user_expense.amount)
-        user_profilee.income = float(user_profilee.income) - float(user_expense.amount)
+        # user_profilee.income = float(user_profilee.income) - float(user_expense.amount)graph
         user_profilee.save() 
 
         

@@ -19,6 +19,7 @@ urlpatterns = [
     path('delete_income/<int:id>/',delete_income,name='delete_income'),
     path('update/<int:id>/',update,name='update'),
     path('income_update/<int:id>/',income_update,name='income_update'),
+    path('graph/',graph,name='graph'),
    
 
  

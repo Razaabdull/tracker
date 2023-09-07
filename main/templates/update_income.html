@@ -5,12 +5,18 @@
     <div  >
     <div style="text-align: center ;" class="top_link"><h1><a href="/home/">ADD INCOME  DETAILS</a></h1></div>
     <h2 class="text-center mt-5 ">UPDATE USER INCOME </h2>
-
+    {% if messages %}
+    {% for message in messages %}
+    <div   id="message_container" class="alert alert-success" role="alert">
+        {{message}}
+        {% endfor %}
+    </div>
+    {% endif %} 
     <form  class="form-check badge-pill " method="post">
         {% csrf_token %}
        
  
-    
+   
     
     <label for="amount">Person Name</label>
     <input type="text" class="form-control" value="{{update_user_income.person}}" name="person" step="0.01" required>

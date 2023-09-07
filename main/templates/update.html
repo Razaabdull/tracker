@@ -5,10 +5,17 @@
     <div  >
     <div style="text-align: center ;"><h1><a href="/home/">ADD INCOME , EXPENSE DETAILS</a></h1></div>
     <h2 class="text-center mt-5 ">UPDATE DETAILS </h2>
-   
+    {% if messages %}
+        {% for message in messages %}
+        <div   id="message_container" class="alert alert-success" role="alert">
+            {{message}}
+            {% endfor %}
+        </div>
+        {% endif %}
     <form  class="form-check badge-pill " method="post">
        
         {% csrf_token %}
+
         <div class="form-group">
            <label for="expenseCategory">Expense Category </label>
            <button type="button" class=" text-center border-0 "
